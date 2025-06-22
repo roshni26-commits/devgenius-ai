@@ -36,6 +36,13 @@ const Chat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
