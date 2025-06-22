@@ -84,7 +84,7 @@ const Home: React.FC = () => {
         <div className="absolute top-20 left-10 opacity-20 text-4xl">{'{ }'}</div>
         <div className="absolute top-32 right-16 opacity-20 text-3xl">const</div>
         <div className="absolute bottom-20 left-20 opacity-20 text-2xl">function()</div>
-        <div className="absolute bottom-32 right-10 opacity-20 text-3xl">=></div>
+        <div className="absolute bottom-32 right-10 opacity-20 text-3xl">=&gt;</div>
       </div>
 
       {/* Features Grid */}
