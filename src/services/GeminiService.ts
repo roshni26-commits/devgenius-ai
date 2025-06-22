@@ -1,5 +1,5 @@
 
-const GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
 let apiKey: string | null = null;
 
@@ -36,7 +36,9 @@ const callGeminiAPI = async (prompt: string): Promise<string> => {
     });
 
     if (!response.ok) {
-      throw new Error(`API call failed: ${response.status}`);
+      const errorData = await response.json();
+      console.error('Gemini API Error Response:', errorData);
+      throw new Error(`API call failed: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
