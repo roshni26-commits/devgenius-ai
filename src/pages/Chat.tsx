@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMode } from '@/context/ModeContext';
 import ChatBubble from '@/components/ChatBubble';
+import ApiKeyInput from '@/components/ApiKeyInput';
 import { getChatResponse } from '@/services/GeminiService';
 
 interface Message {
@@ -49,9 +50,8 @@ const Chat: React.FC = () => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI thinking time
-    setTimeout(() => {
-      const aiResponse = getChatResponse(inputMessage, !isNormalMode);
+    try {
+      const aiResponse = await getChatResponse(inputMessage, !isNormalMode);
       const aiMessage: Message = {
         id: messages.length + 2,
         text: aiResponse,
@@ -60,14 +60,16 @@ const Chat: React.FC = () => {
       };
       
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      const errorMessage: Message = {
+        id: messages.length + 2,
+        text: "Sorry, I encountered an error. Please check your API key and try again.",
+        isUser: false,
+        timestamp: new Date().toLocaleTimeString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
     }
   };
 
@@ -95,6 +97,9 @@ const Chat: React.FC = () => {
             }
           </p>
         </div>
+
+        {/* API Key Input */}
+        <ApiKeyInput />
 
         {/* Chat Container */}
         <div className="bg-white rounded-xl shadow-lg flex flex-col h-96 md:h-[500px]">

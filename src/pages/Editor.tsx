@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { useMode } from '@/context/ModeContext';
 import MonacoWrapper from '@/components/MonacoWrapper';
+import ApiKeyInput from '@/components/ApiKeyInput';
 import { explainCode, reviewCode } from '@/services/GeminiService';
 
 const Editor: React.FC = () => {
@@ -70,15 +70,25 @@ console.log(greetUser("Developer"));
     setIsRunning(false);
   };
 
-  const explainCodeHandler = () => {
-    const explanation = explainCode(code);
-    setAiExplanation(explanation);
+  const explainCodeHandler = async () => {
+    setAiExplanation('Loading explanation...');
+    try {
+      const explanation = await explainCode(code);
+      setAiExplanation(explanation);
+    } catch (error) {
+      setAiExplanation('Error getting explanation. Please check your API key.');
+    }
   };
 
-  const reviewCodeHandler = () => {
+  const reviewCodeHandler = async () => {
     if (isDeveloperMode) {
-      const review = reviewCode(code);
-      setCodeReview(review);
+      setCodeReview('Loading review...');
+      try {
+        const review = await reviewCode(code);
+        setCodeReview(review);
+      } catch (error) {
+        setCodeReview('Error getting code review. Please check your API key.');
+      }
     }
   };
 
@@ -100,6 +110,9 @@ console.log(greetUser("Developer"));
             }
           </p>
         </div>
+
+        {/* API Key Input */}
+        <ApiKeyInput />
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Editor Panel */}
